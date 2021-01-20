@@ -1,0 +1,17 @@
+jg9655.t1	
+jg9649.t1
+jg21223.t2	myosin heavy chain, muscle isoform X12
+jg9652.t1	
+jg17747.t1	Gawky,miRNA
+jg18064.t1	SND1,miRNA
+jg20162.t1	DEAD-box ATP-dependent RNA helicase 20-like; RNA helicases and chaperones
+jg15699.t1	dystonin isoform X15
+jg19933.t1	glutathione S-transferase delta 1; a family of Phase II detoxification enzymes that function to protect cellular macromolecules from attack by reactive electrophiles.
+jg21992.t1	integumentary mucin C.1
+jg21214.t1	Perlecan
+jg18073.t1	
+jg13040.t1
+jg3681.t1
+jg8109.t1
+jg3526.t1
+jg18241.t1

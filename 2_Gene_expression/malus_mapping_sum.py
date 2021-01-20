@@ -4,7 +4,7 @@ for i in range(0,15):
 	y=open(x[i].strip()+'ReadsPerGene.out.tab').readlines()
 	y=[j.split()[0] for j in y[5:] if int(j.split()[1])>100]
 	ctl[x[i]]=y
-	
+
 ctl_sum=[]
 for i in range(0,15):
 	ctl_sum=list(set().union(ctl_sum,ctl[x[i]]))
@@ -32,3 +32,15 @@ for i in range(15,len(x)):
 for k in exp_genes.keys():
 	if exp_genes[k]>2:
 		print(k+'\t'+`exp_genes[k]`)
+
+
+#prepare data for visualization in edgeR
+for i in range(15,len(x)):
+	try:
+		y=open(x[i].strip()+'ReadsPerGene.out.tab').readlines()
+		out=open(x[i].strip()+'.edgeR.gene.count','a')
+		for j in y:
+			if j.split()[0] in exp_genes.keys():
+				out.write(j.split()[0]+'\t'+j.split()[1]+'\n')
+		out.close()
+	except IOError:pass

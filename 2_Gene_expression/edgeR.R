@@ -86,5 +86,46 @@ none of the pairwise comparisons result in significant result
 #####################################
 #Malus analysis
 
+#prefiltered genes (significantly expressed in the experiemnt set but not the control set)
+setwd('malus_sig_exp_genes/')
+files =c("1p.edgeR.gene.count","25p.edgeR.gene.count","37p.edgeR.gene.count","40p.edgeR.gene.count","46p.edgeR.gene.count","48p.edgeR.gene.count","4p.edgeR.gene.count","15p.edgeR.gene.count","16p.edgeR.gene.count","20p.edgeR.gene.count","27p.edgeR.gene.count","2p.edgeR.gene.count","33p.edgeR.gene.count","36p.edgeR.gene.count","39p.edgeR.gene.count","42p.edgeR.gene.count","6p.edgeR.gene.count","13p.edgeR.gene.count","19p.edgeR.gene.count","23p.edgeR.gene.count","32p.edgeR.gene.count")
+group=factor(c(rep(1,7),rep(2,10),rep(3,4)))
+RG <- readDGE(files)
+y <- DGEList(counts=RG,group=group)
+#plotMDS(y,cex=0.3,col=c(rep("black",7), rep("red",10),rep("green",4)) )
+#filter by counts
+keep <- filterByExpr(y)
+y <- y[keep,,keep.lib.sizes=FALSE]
+y <- calcNormFactors(y)
+
+plotMDS(y,cex=0.3,col=c(rep("black",7), rep("red",10),rep("green",4)) )
 
 
+#add control
+setwd('..')
+files =c("1p.edgeR.gene.count","25p.edgeR.gene.count","37p.edgeR.gene.count","40p.edgeR.gene.count","46p.edgeR.gene.count","48p.edgeR.gene.count","4p.edgeR.gene.count","15p.edgeR.gene.count","16p.edgeR.gene.count","20p.edgeR.gene.count","27p.edgeR.gene.count","2p.edgeR.gene.count","33p.edgeR.gene.count","36p.edgeR.gene.count","39p.edgeR.gene.count","42p.edgeR.gene.count","6p.edgeR.gene.count","13p.edgeR.gene.count","19p.edgeR.gene.count","23p.edgeR.gene.count","32p.edgeR.gene.count","18c.edgeR.gene.count","29c.edgeR.gene.count","43c.edgeR.gene.count","50c.edgeR.gene.count","51c.edgeR.gene.count","10c.edgeR.gene.count","22c.edgeR.gene.count","24c.edgeR.gene.count","41c.edgeR.gene.count","45c.edgeR.gene.count","26c.edgeR.gene.count","31c.edgeR.gene.count","35c.edgeR.gene.count","49c.edgeR.gene.count","5c.edgeR.gene.count")
+group=factor(c(rep(1,7),rep(2,10),rep(3,4),rep(4,15)))
+RG <- readDGE(files)
+keep <- filterByExpr(y)
+y <- y[keep,,keep.lib.sizes=FALSE]
+y <- calcNormFactors(y)
+plotMDS(y,cex=0.3,col=c(rep("black",7), rep("red",10),rep("green",4),rep("blue",15)))
+
+###########
+#exluding negative treatment and identify candidates
+files =c("18c.edgeR.gene.count","29c.edgeR.gene.count","43c.edgeR.gene.count","50c.edgeR.gene.count","51c.edgeR.gene.count","10c.edgeR.gene.count","22c.edgeR.gene.count","24c.edgeR.gene.count","41c.edgeR.gene.count","45c.edgeR.gene.count","26c.edgeR.gene.count","31c.edgeR.gene.count","35c.edgeR.gene.count","49c.edgeR.gene.count","5c.edgeR.gene.count","1p.edgeR.gene.count","37p.edgeR.gene.count","40p.edgeR.gene.count","46p.edgeR.gene.count","4p.edgeR.gene.count","15p.edgeR.gene.count","20p.edgeR.gene.count","33p.edgeR.gene.count","36p.edgeR.gene.count","39p.edgeR.gene.count","42p.edgeR.gene.count","6p.edgeR.gene.count","19p.edgeR.gene.count","23p.edgeR.gene.count","32p.edgeR.gene.count")
+group=factor(c(rep(1,15),rep(2,15)))
+RG <- readDGE(files)
+y <- DGEList(counts=RG,group=group)
+keep <- filterByExpr(y)
+y <- y[keep,,keep.lib.sizes=FALSE]
+y <- calcNormFactors(y)
+plotMDS(y,cex=0.7,col=c(rep("black",15), rep("red",15)))
+
+design <- model.matrix(~0+group, data=y$samples)
+y <- estimateDisp(y,design)
+fit <- glmQLFit(y,design)
+qlf <- glmQLFTest(fit,contrast=c(-1,1))
+topTags(qlf)
+summary(decideTests(qlf))
+write.table(qlf$table,'malus_insectRNA_qlf.tsv')
