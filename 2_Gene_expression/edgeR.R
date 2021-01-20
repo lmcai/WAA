@@ -9,7 +9,7 @@
 library(edgeR)
 
 #######################
-#salivary glands vs whoel body tissue
+#salivary glands vs whole body tissue
 
 files <- dir(pattern="*\\.count$")
 RG <- readDGE(files)
@@ -83,6 +83,8 @@ qlf_16_87 <- glmQLFTest(fit,contrast=c(-1,1,0))
 summary(decideTests(qlf_16_87))
 none of the pairwise comparisons result in significant result
 
+#####################################
+#Malus analysis
 
 
 
